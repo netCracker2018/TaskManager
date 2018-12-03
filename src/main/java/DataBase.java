@@ -152,10 +152,20 @@ public class DataBase {
 
 
     //Выводзаписей пользователя
-    public void printTasksUser(){
-
+    public void printTasksUser(int idUser) throws SQLException {
+        preparedStatement = connection.prepareStatement("SELECT * from 'Task' where 'id_user'=?");
+        preparedStatement.setInt(1,idUser);
+        resultSet = preparedStatement.executeQuery();
+        System.out.println("    " + "idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time");
+        while(resultSet.next()){
+            int idTask = resultSet.getInt("id_task");
+            String nameTask = resultSet.getString("name_task");
+            String description = resultSet.getString("DescriptionTask");
+            Data data = (Data) resultSet.getDate("dateTask");
+            Time time = resultSet.getTime("timeTask");
+            System.out.println("    " + idTask + "  " + nameTask+ "  " +description+"   "+data+"  "+time);
+        }
     }
 
     //Получение из бд листа записей/записи
-    //Вывод всех записей для пользователя
 }
