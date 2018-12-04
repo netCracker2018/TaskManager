@@ -6,7 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="TaskManager" />
+        <module name="Alert" />
+        <module name="Database" />
+        <module name="Journal" />
+        <module name="Pojo" />
+        <module name="UI" />
       </profile>
     </annotationProcessing>
   </component>
