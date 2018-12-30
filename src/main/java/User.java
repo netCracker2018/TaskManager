@@ -1,14 +1,31 @@
+import java.sql.SQLException;
 import java.util.List;
 
 public class User {
+    private DataBase dataBase;
+    private int idUser;
     private String userName;
     private List<Task> taskList;
-    private int idUser;
+    private TaskLog taskLog;
 
-    public User(int idUser,String userName){
+    public User(int idUser,String userName,DataBase dataBase) throws SQLException {
         this.idUser=idUser;
         this.userName=userName;
-        //Добавить лист задач, его брать из бд по айди пользователя
+        this.dataBase = dataBase;
+        this.taskLog = new TaskLog(dataBase,idUser);
+        this.taskList = taskLog.getListTaskUser(idUser);
+    }
+
+    public DataBase getDataBase() {
+        return dataBase;
+    }
+
+    public void setDataBase(DataBase dataBase) {
+        this.dataBase = dataBase;
+    }
+
+    public int getIdUser() {
+        return idUser;
     }
 
     public String getUserName() {
@@ -19,19 +36,16 @@ public class User {
         this.userName = userName;
     }
 
+    public void updateNameUser(String userNameNew) throws SQLException {
+        if(dataBase.getEqualsUserName(userNameNew)){
+            System.out.println("Такой пользователь уже есть");
+        }else{
+            dataBase.updateUser(this.idUser,userNameNew);
+            this.userName = userNameNew;
+        }
+    }
+
     public List<Task> getTaskList() {
         return taskList;
-    }
-
-    public void setTaskList(List<Task> taskList) {
-        this.taskList = taskList;
-    }
-
-    public int getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(int idUser) {
-        this.idUser = idUser;
     }
 }
