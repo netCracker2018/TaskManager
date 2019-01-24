@@ -15,6 +15,7 @@ public class main {
         stage.setScene(new Scene(parent));
         stage.show();*/
         DataBase dataBase = new DataBase();
+        
        // dataBase.printTableUser();
      //  dataBase.deleteUser(0);
       //  dataBase.addUser(1,"userTest");
