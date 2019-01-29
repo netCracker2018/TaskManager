@@ -1,5 +1,6 @@
 import javax.xml.crypto.Data;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBase {
@@ -49,22 +50,22 @@ public class DataBase {
     public void deleteDB(String nameDB) throws SQLException { //delete DB
         nameDB.toLowerCase();
         if (nameDB.equals("user")) {
-            statement.execute("drop TABLE 'User'");
+            statement.execute("drop TABLE User");
         } else {
             if (nameDB.equals("Task")) {
-                statement.execute("drop TABLE 'Task'");
+                statement.execute("drop TABLE Task");
             } else {
                 System.out.println("Такой базы дынных не существует");
             }
         }
     }
 
-    public void addUser(int idUser, String nameUser) throws SQLException { //Добавление пользователя
+    public void addUser(String nameUser) throws SQLException { //Добавление пользователя
         if(getEqualsUserName(nameUser)){
             System.out.println("Пользователь с таким именнем уже существует");
         }else{
-            preparedStatement = connection.prepareStatement("INSERT into 'user'('id_user','name_user')" + "VALUES (?,?)");
-            preparedStatement.setInt(1, idUser);
+            preparedStatement = connection.prepareStatement("INSERT into User(id_user,name_user)" + "VALUES (?,?)");
+            preparedStatement.setInt(1, getMaxIdUser()+1);
             preparedStatement.setString(2, nameUser);
             preparedStatement.execute();
             System.out.println("User add");
@@ -72,7 +73,7 @@ public class DataBase {
     }
 
     public void updateUser(int idUser, String nameUser) throws SQLException { //Изменение имени пользователя
-        preparedStatement = connection.prepareStatement("UPDATE 'User' set 'name_user' = ? where 'id_user'=?");
+        preparedStatement = connection.prepareStatement("UPDATE User set name_user = ? where id_user=?");
         preparedStatement.setString(1, nameUser);
         preparedStatement.setInt(2, idUser);
         preparedStatement.execute();
@@ -80,7 +81,7 @@ public class DataBase {
     }
 
     public void deleteUser(int idUser) throws SQLException { //Удаление пользователя
-        preparedStatement = connection.prepareStatement("DELETE from 'user' where 'id_user' = ?");
+        preparedStatement = connection.prepareStatement("DELETE from User where id_user = ?");
         preparedStatement.setInt(1, idUser);
         preparedStatement.execute();
         System.out.println("Пользователь удален");
@@ -88,7 +89,7 @@ public class DataBase {
 
     public User getUserInDB(int idUser, DataBase dataBase) throws SQLException { //Получение User
         User user = null;
-        preparedStatement = connection.prepareStatement("SELECT 'name_user' FROM 'User' where 'id_user'= ? ");
+        preparedStatement = connection.prepareStatement("SELECT name_user FROM User where id_user= ? ");
         preparedStatement.setInt(1, idUser);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
@@ -98,7 +99,7 @@ public class DataBase {
     }
 
     public void printTableUser() throws SQLException { //Вывод таблицы User
-        resultSet = statement.executeQuery("SELECT * FROM 'User'");
+        resultSet = statement.executeQuery("SELECT * FROM User");
         System.out.println("    " + "idUser" + "  " + "nameUser");
         while (resultSet.next()) {
             int idUser = resultSet.getInt("id_user");
@@ -109,12 +110,12 @@ public class DataBase {
     }
 
     //Добавление задачи
-    public void addTask(int idUser, int idTask, String nameTask, String descriptionTask,Date date, Time time) throws SQLException { //data and time добавить
-        preparedStatement = connection.prepareStatement("INSERT into 'Task'('id_task','name_task','DescriptionTask','dateTask','timeTask','id_user')"+"values (?,?,?,?,?,?)");
-        preparedStatement.setInt(1, idTask);
+    public void addTask(int idUser, String nameTask, String descriptionTask, java.sql.Date date, java.sql.Time time) throws SQLException { //data and time добавить
+        preparedStatement = connection.prepareStatement("INSERT into Task(id_task,name_task,DescriptionTask,dateTask,timeTask,id_user) values (?,?,?,?,?,?)");
+        preparedStatement.setInt(1, getMaxIdTask()+1);
         preparedStatement.setString(2, nameTask);
         preparedStatement.setString(3, descriptionTask);
-        preparedStatement.setDate(4, date);
+        preparedStatement.setDate(4, date); //new java.sql.Date(System.currentTimeMillis())
         preparedStatement.setTime(5, time);
         preparedStatement.setInt(6, idUser);
         preparedStatement.execute();
@@ -122,8 +123,8 @@ public class DataBase {
     }
 
     //Обновление задачи
-    public void updateTask(int idUser, int idTask, String nameTask, String descriptionTask,Date date,Time time) throws SQLException { //data and time
-        preparedStatement = connection.prepareStatement("UPDATE 'Task' set 'name_task' = ?,'DescriptionTask'=?,'dateTask'=?,'timeTask'=? where 'id_user'=? and 'id_task'=?");
+    public void updateTask(int idUser, int idTask, String nameTask, String descriptionTask, Date date,Time time) throws SQLException { //data and time
+        preparedStatement = connection.prepareStatement("UPDATE Task set name_task = ?,DescriptionTask=?,dateTask=?,timeTask=? where id_user=? and id_task=?");
         preparedStatement.setString(1, nameTask);
         preparedStatement.setString(2, descriptionTask);
         preparedStatement.setDate(3, date);
@@ -136,20 +137,20 @@ public class DataBase {
 
     //Удаление задачи
     public void deleteTask(int idTask) throws SQLException {
-        preparedStatement = connection.prepareStatement("DELETE from 'Task' where 'id_task' = ?");
+        preparedStatement = connection.prepareStatement("DELETE from Task where id_task = ?");
         preparedStatement.setInt(1, idTask);
-        resultSet = preparedStatement.executeQuery(); //Выполнение запроса
+        preparedStatement.execute(); //Выполнение запроса
         System.out.println("Задача удалена");
     }
 
     //delete all task in user
     public void deleteAllTaskUser(int idUser) throws SQLException {
-        preparedStatement = connection.prepareStatement("delete from 'Task' where 'id_user'=?");
+        preparedStatement = connection.prepareStatement("delete from Task where id_user=?");
     }
 
     //Вывод таблицы task
     public void printTableTask() throws SQLException {
-        resultSet = statement.executeQuery("SELECT * FROM 'Task'");
+        resultSet = statement.executeQuery("SELECT * FROM Task");
         System.out.println("    " + "idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time"+"  "+"idUsr");
         while (resultSet.next()) {
             int idTask = resultSet.getInt("id_task");
@@ -163,13 +164,12 @@ public class DataBase {
         System.out.println("БД выведена");
     }
 
-
     //Вывод записей пользователя
     public void printTasksUser(int idUser) throws SQLException {
-        preparedStatement = connection.prepareStatement("SELECT * from 'Task' where 'id_user'=?");
+        preparedStatement = connection.prepareStatement("SELECT * from Task where id_user=?");
         preparedStatement.setInt(1,idUser);
         resultSet = preparedStatement.executeQuery();
-        System.out.println("    " + "idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time");
+        System.out.println("idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time");
         while(resultSet.next()){
             int idTask = resultSet.getInt("id_task");
             String nameTask = resultSet.getString("name_task");
@@ -182,8 +182,8 @@ public class DataBase {
 
     //Получение листа записей
     public List<Task> getListTasks(DataBase dataBase) throws SQLException {
-        List<Task> listTask = null;
-        resultSet = statement.executeQuery("select * from 'Task'");
+        ArrayList<Task> listTask = new ArrayList<Task>();
+        resultSet = statement.executeQuery("select * from Task");
         while (resultSet.next()) {
             int idTask = resultSet.getInt("id_task");
             int idUser = resultSet.getInt("id_user");
@@ -196,10 +196,28 @@ public class DataBase {
         return listTask;
     }
 
+    //Получение записей конкретного пользователя
+    public List<Task> getTasksUser(int idUser,DataBase dataBase) throws SQLException {
+        ArrayList<Task> listTask = new ArrayList<Task>();
+        preparedStatement = connection.prepareStatement("SELECT * from Task where id_user=?");
+        preparedStatement.setInt(1,idUser);
+        resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()){
+            int idTask = resultSet.getInt("id_task");
+            String nameTask = resultSet.getString("name_task");
+            String description = resultSet.getString("DescriptionTask");
+            Date date = resultSet.getDate("dateTask");
+            Time time = resultSet.getTime("timeTask");
+            Task task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
+            listTask.add(task);
+        }
+        return listTask;
+    }
+
     //Получение одной записи
     public Task getTask(int idTask,DataBase dataBase) throws SQLException {
         Task task=null;
-        preparedStatement = connection.prepareStatement("SELECT * from 'Task' where 'id_task'=?");
+        preparedStatement = connection.prepareStatement("SELECT * from Task where id_task=?");
         preparedStatement.setInt(1,idTask);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
@@ -213,27 +231,10 @@ public class DataBase {
         return task;
     }
 
-    //Получение записей конкретного пользователя
-    public List<Task> getTasksUser(int idUser,DataBase dataBase) throws SQLException {
-        List<Task> listTask = null;
-        preparedStatement = connection.prepareStatement("SELECT * from 'Task' where 'id_user'=?");
-        preparedStatement.setInt(1,idUser);
-        resultSet = preparedStatement.executeQuery();
-        while(resultSet.next()){
-            int idTask = resultSet.getInt("id_task");
-            String nameTask = resultSet.getString("name_task");
-            String description = resultSet.getString("DescriptionTask");
-            Date date = resultSet.getDate("dateTask");
-            Time time = resultSet.getTime("timeTask");
-            listTask.add(new Task(idTask,idUser,nameTask,description,date,time,dataBase));
-        }
-        return listTask;
-    }
-
     //Получение задачи у пользователя
     public Task getTaskUser(int idUser,int idTask,DataBase dataBase) throws SQLException {
         Task task=null;
-        preparedStatement = connection.prepareStatement("SELECT * from 'Task' where 'id_task'=? and 'id_user'=?");
+        preparedStatement = connection.prepareStatement("SELECT * from Task where id_task=? and id_user=?");
         preparedStatement.setInt(1,idTask);
         preparedStatement.setInt(2,idUser);
         resultSet = preparedStatement.executeQuery();
@@ -250,7 +251,7 @@ public class DataBase {
     //проверка, есть ли пользователь в системе
     public Boolean getEqualsUserId(int idUser) throws SQLException {
         boolean flag=false;
-        preparedStatement = connection.prepareStatement("select * from 'User' where 'id_user'=?");
+        preparedStatement = connection.prepareStatement("select * from User where id_user=?");
         preparedStatement.setInt(1,idUser);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
@@ -262,7 +263,7 @@ public class DataBase {
     //Существует ли такая задача
     public Boolean getEqualdTask(int idTask) throws SQLException {
         boolean flag=false;
-        preparedStatement = connection.prepareStatement("select  * From 'Task' where 'id_task'=?");
+        preparedStatement = connection.prepareStatement("select  * From Task where id_task=?");
         preparedStatement.setInt(1,idTask);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
@@ -274,7 +275,7 @@ public class DataBase {
     //Проверка, есть ли у пользователя такакя задача
     public Boolean getEqualdTaskUser(int idTask,int idUser) throws SQLException {
         boolean flag=false;
-        preparedStatement = connection.prepareStatement("select  * From 'Task' where 'id_task'=? and 'id_user'=?");
+        preparedStatement = connection.prepareStatement("select  * From Task where id_task=? and id_user=?");
         preparedStatement.setInt(1,idTask);
         preparedStatement.setInt(2,idUser);
         resultSet = preparedStatement.executeQuery();
@@ -287,7 +288,7 @@ public class DataBase {
     //Подсчет кол-ва задач
     public int countTask() throws SQLException {
         int countTask=0;
-        resultSet = statement.executeQuery("select 'id_task' from 'Task'");
+        resultSet = statement.executeQuery("select id_task from Task");
         while (resultSet.next()) {
             countTask++;
         }
@@ -297,7 +298,7 @@ public class DataBase {
     //Подсчет кол-ва пользователей
     public int countUser() throws SQLException {
         int countUser=0;
-        resultSet = statement.executeQuery("select 'id_user' from 'User'");
+        resultSet = statement.executeQuery("select id_user from User");
         while (resultSet.next()) {
             countUser++;
         }
@@ -306,7 +307,7 @@ public class DataBase {
 
     public boolean getEqualsUserName(String nameUser) throws SQLException {
         boolean flag=false;
-        preparedStatement = connection.prepareStatement("select * from 'User' where 'name_user'=?");
+        preparedStatement = connection.prepareStatement("select * from User where name_user=?");
         preparedStatement.setString(1,nameUser);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
@@ -317,12 +318,36 @@ public class DataBase {
 
     public int getIdUserInName(String nameUser) throws SQLException {
         int idUser = 0;
-        preparedStatement = connection.prepareStatement("select * from 'User' where 'name_user'=?");
+        preparedStatement = connection.prepareStatement("select * from User where name_user=?");
         preparedStatement.setString(1,nameUser);
         resultSet = preparedStatement.executeQuery();
         while(resultSet.next()){
             idUser = resultSet.getInt("id_user");
         }
         return idUser;
+    }
+
+    public int getMaxIdUser() throws SQLException {
+        int maxId = 0;
+        resultSet = statement.executeQuery("SELECT id_user from User");
+        while (resultSet.next()) {
+            int idUser = resultSet.getInt("id_user");
+            if (maxId < idUser) {
+                maxId = idUser;
+            }
+        }
+        return maxId;
+    }
+
+    public int getMaxIdTask() throws SQLException {
+        int maxId = 0;
+        resultSet = statement.executeQuery("SELECT id_task from Task");
+        while (resultSet.next()) {
+            int idTask = resultSet.getInt("id_task");
+            if (maxId < idTask) {
+                maxId = idTask;
+            }
+        }
+        return maxId;
     }
 }

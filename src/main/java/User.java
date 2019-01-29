@@ -12,8 +12,8 @@ public class User {
         this.idUser=idUser;
         this.userName=userName;
         this.dataBase = dataBase;
-        this.taskLog = new TaskLog(dataBase,idUser);
-        this.taskList = taskLog.getListTaskUser(idUser);
+        this.taskLog = new TaskLog(dataBase,this);
+        this.taskList = taskLog.getTaskList();
     }
 
     public DataBase getDataBase() {

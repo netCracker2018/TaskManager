@@ -10,7 +10,6 @@ public class Task {
     private int id_User;
     private Date dateTask; //dateTask
     private Time timeTask; //timeTask
-    private User user;
 
     public Task(int idTask, int id_User, String nameTask, String descriptionTask, Date dateTask, Time timeTask, DataBase dataBase) throws SQLException {
         if(dataBase.getEqualsUserId(id_User)){
@@ -21,14 +20,9 @@ public class Task {
             this.dateTask = dateTask;
             this.timeTask = timeTask;
             this.dataBase=dataBase;
-            this.user = dataBase.getUserInDB(id_User,dataBase);
         }else {
-            System.out.println("Такого user-a нет в системе");
+            System.out.println("Данный пользователь отсутствует в системе");
         }
-    }
-
-    public User getUser() {
-        return user;
     }
 
     public DataBase getDataBase() {

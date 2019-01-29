@@ -11,10 +11,10 @@ public class Signal {
     private DataBase dataBase;
     private TaskLog taskLog;
 
-    public Signal(DataBase dataBase,int idUser) throws SQLException {
+    public Signal(DataBase dataBase,User user) throws SQLException {
         this.dataBase = dataBase;
-        taskLog = new TaskLog(dataBase,idUser);
-        user = taskLog.getUser();
+        taskLog = new TaskLog(dataBase,user);
+        this.user=user;
         taskList = taskLog.getTaskList();
     }
 

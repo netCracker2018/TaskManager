@@ -8,10 +8,10 @@ public class TaskLog {
     private User user;
     private DataBase dataBase;
 
-    public TaskLog(DataBase dataBase, int idUser) throws SQLException {
+    public TaskLog(DataBase dataBase, User user) throws SQLException {
         this.dataBase = dataBase;
-        this.taskList = dataBase.getListTasks(dataBase);
-        this.user = dataBase.getUserInDB(idUser, dataBase);
+        this.taskList = dataBase.getTasksUser(user.getIdUser(),dataBase); //Задачи одного пользователя одного
+        this.user=user;
     }
 
     public User getUser() {
@@ -39,14 +39,9 @@ public class TaskLog {
         this.taskList = dataBase.getListTasks(dataBase);
     }
 
-    //Возвращает лист задач для пользователя
-    public List<Task> getListTaskUser(int idUser) throws SQLException {
-        return dataBase.getTasksUser(idUser, dataBase);
-    }
-
     public void addTaskUser(String nameTask, String descriptionTask, Date date, Time time) throws SQLException {
         int idTask = dataBase.countTask() + 1;
-        dataBase.addTask(user.getIdUser(), idTask, nameTask, descriptionTask, date, time);
+        dataBase.addTask(user.getIdUser(), nameTask, descriptionTask, date, time);
         this.taskList = dataBase.getListTasks(dataBase); //Обновление листа задач в этом классе
     }
 
