@@ -110,12 +110,12 @@ public class DataBase {
     }
 
     //Добавление задачи
-    public void addTask(int idUser, String nameTask, String descriptionTask,Date date, Time time) throws SQLException { //data and time добавить
+    public void addTask(int idUser, String nameTask, String descriptionTask, java.sql.Date date, java.sql.Time time) throws SQLException { //data and time добавить
         preparedStatement = connection.prepareStatement("INSERT into Task(id_task,name_task,DescriptionTask,dateTask,timeTask,id_user) values (?,?,?,?,?,?)");
         preparedStatement.setInt(1, getMaxIdTask()+1);
         preparedStatement.setString(2, nameTask);
         preparedStatement.setString(3, descriptionTask);
-        preparedStatement.setDate(4, date);
+        preparedStatement.setDate(4, date); //new java.sql.Date(System.currentTimeMillis())
         preparedStatement.setTime(5, time);
         preparedStatement.setInt(6, idUser);
         preparedStatement.execute();
@@ -123,7 +123,7 @@ public class DataBase {
     }
 
     //Обновление задачи
-    public void updateTask(int idUser, int idTask, String nameTask, String descriptionTask,Date date,Time time) throws SQLException { //data and time
+    public void updateTask(int idUser, int idTask, String nameTask, String descriptionTask, Date date,Time time) throws SQLException { //data and time
         preparedStatement = connection.prepareStatement("UPDATE Task set name_task = ?,DescriptionTask=?,dateTask=?,timeTask=? where id_user=? and id_task=?");
         preparedStatement.setString(1, nameTask);
         preparedStatement.setString(2, descriptionTask);
