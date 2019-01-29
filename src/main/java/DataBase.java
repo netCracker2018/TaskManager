@@ -115,7 +115,7 @@ public class DataBase {
         preparedStatement.setInt(1, getMaxIdTask()+1);
         preparedStatement.setString(2, nameTask);
         preparedStatement.setString(3, descriptionTask);
-        preparedStatement.setDate(4, date); //new java.sql.Date(System.currentTimeMillis())
+        preparedStatement.setDate(4, date);
         preparedStatement.setTime(5, time);
         preparedStatement.setInt(6, idUser);
         preparedStatement.execute();

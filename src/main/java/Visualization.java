@@ -1,6 +1,6 @@
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Time;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class Visualization {
@@ -78,27 +78,34 @@ public class Visualization {
     }
 
     //Добаление задачи
-    private void addTask() throws SQLException, IOException { //Разобраться как работает дата и время с sql и как добавить
+    private void addTask() throws SQLException, IOException {
         System.out.println("Введите название задачи");
         String nameTask = scanner.next();
+        System.out.println("Введите год исполнения задачи"); //Добавить проверку на те года, которые уже прошли
+        int year = scanner.nextInt();
+        System.out.println("Введите месяц исполнения задачи");
+        int mounth = scanner.nextInt();
+        System.out.println("Введите день исполнения задачи");
+        int day = scanner.nextInt();
 
-        //System.out.println("Input Time task в формате hh:mm:ss");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(0);
 
-        //for date and time
-        java.util.Date today = new java.util.Date();
-        java.sql.Timestamp timeStamp = new java.sql.Timestamp(today.getTime());
+        System.out.println("Введите час исполнения задачи"); //Добавить проверку на то время, которое уже прошло
+        int hour = scanner.nextInt();
+        System.out.println("Введите минуты исполнения задачи");
+        int minute = scanner.nextInt();
 
-        java.sql.Date date = new java.sql.Date(today.getDate());
+        calendar.set((year-1),(mounth-1),day,hour,minute,00);
 
-        Time time = new Time(12,12,12);
-        time.setTime(1212112);
-        time.setMinutes(12);
-        time.setSeconds(12);
+        long dateCalendar = calendar.getTimeInMillis();
+        java.sql.Date dateSqlCalendar = new java.sql.Date(dateCalendar);
+        java.sql.Time timeSqlCalendar = new java.sql.Time(dateCalendar);
 
         System.out.println("Введите описание задачи: ");
         String descriptionTask = scanner.next();
 
-        dataBase.addTask(user.getIdUser(),nameTask,descriptionTask, date, time);
+        dataBase.addTask(user.getIdUser(),nameTask,descriptionTask, dateSqlCalendar, timeSqlCalendar);
         System.out.println("Задача добавлена.");
         clearConsole();
         menuTaskUser();
@@ -129,24 +136,31 @@ public class Visualization {
         if (dataBase.getEqualdTask(idTask)) {
             System.out.println("Введите название задачи");
             String nameTask = scanner.next();
+            System.out.println("Введите год исполнения задачи"); //Добавить проверку на те года, которые уже прошли
+            int year = scanner.nextInt();
+            System.out.println("Введите месяц исполнения задачи");
+            int mounth = scanner.nextInt();
+            System.out.println("Введите день исполнения задачи");
+            int day = scanner.nextInt();
 
-            //System.out.println("Input Time task в формате hh:mm:ss");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(0);
 
-            //for date and time
-            java.util.Date today = new java.util.Date();
-            java.sql.Timestamp timeStamp = new java.sql.Timestamp(today.getTime());
+            System.out.println("Введите час исполнения задачи"); //Добавить проверку на то время, которое уже прошло
+            int hour = scanner.nextInt();
+            System.out.println("Введите минуты исполнения задачи");
+            int minute = scanner.nextInt();
 
-            java.sql.Date date = new java.sql.Date(today.getDate());
+            calendar.set((year-1),(mounth-1),day,hour,minute,00);
 
-            Time time = new Time(12,12,12);
-            time.setTime(1212112);
-            time.setMinutes(12);
-            time.setSeconds(12);
+            long dateCalendar = calendar.getTimeInMillis();
+            java.sql.Date dateSqlCalendar = new java.sql.Date(dateCalendar);
+            java.sql.Time timeSqlCalendar = new java.sql.Time(dateCalendar);
 
             System.out.println("Введите описание задачи: ");
             String descriptionTask = scanner.next();
 
-            dataBase.updateTask(user.getIdUser(), idTask, nameTask, descriptionTask,date,time);
+            dataBase.addTask(user.getIdUser(),nameTask,descriptionTask, dateSqlCalendar, timeSqlCalendar);
             System.out.println("Задача изменена");
             clearConsole();
             menuTaskUser();
