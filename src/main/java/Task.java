@@ -8,10 +8,10 @@ public class Task {
     private String nameTask;
     private String descriptionTask;
     private int id_User;
-    private Date dateTask; //dateTask
-    private Time timeTask; //timeTask
+    private java.sql.Date dateTask; //dateTask
+    private java.sql.Time timeTask; //timeTask
 
-    public Task(int idTask, int id_User, String nameTask, String descriptionTask, Date dateTask, Time timeTask, DataBase dataBase) throws SQLException {
+    public Task(int idTask, int id_User, String nameTask, String descriptionTask, java.sql.Date dateTask, java.sql.Time timeTask, DataBase dataBase) throws SQLException {
         if(dataBase.getEqualsUserId(id_User)){
             this.idTask=idTask;
             this.id_User=id_User;
@@ -59,20 +59,20 @@ public class Task {
         return id_User;
     }
 
-    public Date getDateTask() {
+    public java.sql.Date getDateTask() {
         return dateTask;
     }
 
-    public void setDateTask(Date dateTask) throws SQLException {
+    public void setDateTask(java.sql.Date dateTask) throws SQLException {
         dataBase.updateTask(this.id_User,this.idTask,this.nameTask,this.descriptionTask,dateTask,this.timeTask);
         this.dateTask = dateTask;
     }
 
-    public Time getTimeTask() {
+    public java.sql.Time getTimeTask() {
         return timeTask;
     }
 
-    public void setTimeTask(Time timeTask) throws SQLException {
+    public void setTimeTask(java.sql.Time timeTask) throws SQLException {
         dataBase.updateTask(this.id_User,this.idTask,this.nameTask,this.descriptionTask,this.dateTask,timeTask);
         this.timeTask = timeTask;
     }

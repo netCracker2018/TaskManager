@@ -189,8 +189,8 @@ public class DataBase {
             int idUser = resultSet.getInt("id_user");
             String nameTask = resultSet.getString("name_task");
             String description = resultSet.getString("DescriptionTask");
-            Date date = resultSet.getDate("dateTask");
-            Time time = resultSet.getTime("timeTask");
+            java.sql.Date date = resultSet.getDate("dateTask");
+            java.sql.Time time = resultSet.getTime("timeTask");
             listTask.add(new Task(idTask,idUser,nameTask,description,date,time,dataBase));
         }
         return listTask;
@@ -206,8 +206,8 @@ public class DataBase {
             int idTask = resultSet.getInt("id_task");
             String nameTask = resultSet.getString("name_task");
             String description = resultSet.getString("DescriptionTask");
-            Date date = resultSet.getDate("dateTask");
-            Time time = resultSet.getTime("timeTask");
+            java.sql.Date date = resultSet.getDate("dateTask");
+            java.sql.Time time = resultSet.getTime("timeTask");
             Task task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
             listTask.add(task);
         }
@@ -224,8 +224,8 @@ public class DataBase {
             int idUser = resultSet.getInt("id_user");
             String nameTask = resultSet.getString("name_task");
             String description = resultSet.getString("DescriptionTask");
-            Date date = resultSet.getDate("dateTask");
-            Time time = resultSet.getTime("timeTask");
+            java.sql.Date date = resultSet.getDate("dateTask");
+            java.sql.Time time = resultSet.getTime("timeTask");
             task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
         }
         return task;
@@ -241,8 +241,8 @@ public class DataBase {
         while(resultSet.next()){
             String nameTask = resultSet.getString("name_task");
             String description = resultSet.getString("DescriptionTask");
-            Date date = resultSet.getDate("dateTask");
-            Time time = resultSet.getTime("timeTask");
+            java.sql.Date date = resultSet.getDate("dateTask");
+            java.sql.Time time = resultSet.getTime("timeTask");
             task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
         }
         return task;
