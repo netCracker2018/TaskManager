@@ -15,8 +15,8 @@ public class Signal {
         taskList = taskLog.getTaskList();
 
         //Запуск не совсем так, нужно, чтобы каждую минуту он сам запускался, сама реализация класса тоже не факт, что верна, т.е. треда
-        threadForSignal = new ThreadForSignal(taskList);
-        threadForSignal.run();
+        threadForSignal = new ThreadForSignal(taskList,0);
+        threadForSignal.start();
     }
 
   /*  public void signalTaskUser(){

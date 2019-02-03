@@ -37,6 +37,7 @@ public class main {
         Visualization visualization =  new Visualization(dataBase);
         visualization.mainMenu();
 
+  //  dataBase.deleteAllTaskUser(1);
 
     //Работает нормальное добавление нынешней даты и времени
 

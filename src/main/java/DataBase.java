@@ -146,6 +146,9 @@ public class DataBase {
     //delete all task in user
     public void deleteAllTaskUser(int idUser) throws SQLException {
         preparedStatement = connection.prepareStatement("delete from Task where id_user=?");
+        preparedStatement.setInt(1, idUser);
+        preparedStatement.execute(); //Выполнение запроса
+        System.out.println("Все задачи пользователя "+idUser+" удалены");
     }
 
     //Вывод таблицы task

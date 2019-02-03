@@ -7,6 +7,7 @@ public class Visualization {
     private DataBase dataBase;
     private Scanner scanner;
     private User user;
+    private Signal signal;
 
     public Visualization(DataBase dataBase) {
         this.dataBase = dataBase;
@@ -34,6 +35,7 @@ public class Visualization {
                 user = new User(dataBase.getIdUserInName(name),name,dataBase);
                 clearConsole();
                 System.out.println("Вход в систему выполнен");
+                signal = new Signal(dataBase,user); //Запуск уведомлений сразу, как пользователь авторизовался
                 menuTaskUser();
             }else{
                 clearConsole();
