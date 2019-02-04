@@ -14,19 +14,8 @@ public class Signal {
         this.user=user;
         taskList = taskLog.getTaskList();
 
-        //Запуск не совсем так, нужно, чтобы каждую минуту он сам запускался, сама реализация класса тоже не факт, что верна, т.е. треда
+        //Запуск потока с уведомлениями
         threadForSignal = new ThreadForSignal(taskList,0);
         threadForSignal.start();
     }
-
-  /*  public void signalTaskUser(){
-        Time time = user.getTaskList().get(1).getTimeTask(); //Взяли время
-        time.getTime(); //Получает в милисекундах, как я понял
-        time.valueOf("hh:mm:ss"); //Задает время строкой и преобразует - так и будем делать
-
-        //Получение текущей даты
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        System.out.println(dateFormat.format(date));
-    }*/
 }

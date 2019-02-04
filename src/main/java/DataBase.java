@@ -154,7 +154,7 @@ public class DataBase {
     //Вывод таблицы task
     public void printTableTask() throws SQLException {
         resultSet = statement.executeQuery("SELECT * FROM Task");
-        System.out.println("    " + "idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time"+"  "+"idUsr");
+        System.out.printf("idTask\tnameTask\tDescriptionTask\tData\tTime\tidUsr\n");
         while (resultSet.next()) {
             int idTask = resultSet.getInt("id_task");
             String nameTask = resultSet.getString("name_task");
@@ -162,7 +162,7 @@ public class DataBase {
             Data data = (Data) resultSet.getDate("dateTask");
             Time time = resultSet.getTime("timeTask");
             int idUser = resultSet.getInt("id_user");
-            System.out.println("    " + idTask + "  " + nameTask+ "  " +description+"   "+data+"  "+time+"  "+idUser);
+            System.out.printf(idTask + "\t" + nameTask+ "\t" +description+"\t"+data+"\t"+time+"\t"+idUser+"\n");
         }
         System.out.println("БД выведена");
     }
@@ -172,14 +172,14 @@ public class DataBase {
         preparedStatement = connection.prepareStatement("SELECT * from Task where id_user=?");
         preparedStatement.setInt(1,idUser);
         resultSet = preparedStatement.executeQuery();
-        System.out.println("idTask" + "  " + "nameTask"+"  "+"DescriptionTask"+"   "+"Data"+"  "+"Time");
+        System.out.printf("idTask\tnameTask\tDescriptionTask\tData\tTime\n");
         while(resultSet.next()){
             int idTask = resultSet.getInt("id_task");
             String nameTask = resultSet.getString("name_task");
             String description = resultSet.getString("DescriptionTask");
             Date date = resultSet.getDate("dateTask");
             Time time = resultSet.getTime("timeTask");
-            System.out.println("    " + idTask + "  " + nameTask+ "  " +description+"   "+date+"  "+time);
+            System.out.printf(idTask + "\t" + nameTask+ "\t" +description+"\t"+date+"\t"+time+"\n");
         }
     }
 
@@ -202,19 +202,33 @@ public class DataBase {
     //Получение записей конкретного пользователя
     public List<Task> getTasksUser(int idUser,DataBase dataBase) throws SQLException {
         ArrayList<Task> listTask = new ArrayList<Task>();
-        preparedStatement = connection.prepareStatement("SELECT * from Task where id_user=?");
-        preparedStatement.setInt(1,idUser);
-        resultSet = preparedStatement.executeQuery();
-        while(resultSet.next()){
-            int idTask = resultSet.getInt("id_task");
-            String nameTask = resultSet.getString("name_task");
-            String description = resultSet.getString("DescriptionTask");
-            java.sql.Date date = resultSet.getDate("dateTask");
-            java.sql.Time time = resultSet.getTime("timeTask");
-            Task task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
-            listTask.add(task);
+        for(int i =1;i<getCountStatUser(idUser)+1;i++){
+            preparedStatement = connection.prepareStatement("SELECT * from Task where id_user=? and id_task=?");
+            preparedStatement.setInt(1,idUser);
+            preparedStatement.setInt(2, i);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                int idTask = resultSet.getInt("id_task");
+                String nameTask = resultSet.getString("name_task");
+                String description = resultSet.getString("DescriptionTask");
+                java.sql.Date date = resultSet.getDate("dateTask");
+                java.sql.Time time = resultSet.getTime("timeTask");
+                Task task = new Task(idTask,idUser,nameTask,description,date,time,dataBase);
+                listTask.add(task);
+            }
         }
         return listTask;
+    }
+
+    public int getCountStatUser(int idUser) throws SQLException {
+        int count = 0;
+        preparedStatement = connection.prepareStatement("select id_task from Task where id_user=?");
+        preparedStatement.setInt(1,idUser);
+        resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            count++;
+        }
+        return count;
     }
 
     //Получение одной записи
